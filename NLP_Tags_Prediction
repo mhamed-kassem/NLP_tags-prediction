@@ -1,0 +1,43 @@
+in NLP_Tags_Prediction 
+we use 
+CNN  
+Bag-of-words model 
+      :https://en.wikipedia.org/wiki/Bag-of-words_model
+      
+      
+ When feeding data into our model, we’ll separate it into training and test data
+ The majority of our data will be used as examples that our model will use to update its weights and biases 
+ When the model has finished training, we’ll reserve a subset of our data to test its accuracy on examples it hasn’t seen before
+ A typical rule for this is to use 80% of your data for training and 20% for testing
+
+Keras has some built in methods for preprocessing text  to create bag of word vectorse. 
+The Tokenizer class provides methods to count the unique words in our vocabulary and assign each of those words to indices
+
+With our Tokenizer, we can now use the texts_to_matrix method to create the training data we’ll pass our model
+This will take each post’s text and turn it into a vocab_size “bag” array, with 1s indicating the indices
+where words in a question are present in the vocabulary
+
+The tag for each question is a string (i.e. “javascript” or “php”)
+we need to encode each tag as an integer. But instead of using a single int as the label for each input, 
+we turn it into a one-hot vector. If we had only 5 tags (labels) in our dataset and 
+the label “java” was associated with the index 3, our one-hot label vector would look like this:
+  [0 0 0 1 0]
+
+We feed a one-hot vector to our model instead of a single integer because when we use our model for prediction,
+it will output a vector of probabilities for each post like the following:
+
+  [ 0.08078627  0.24490279  0.21754906  0.23220219  0.22455971]
+
+scikit-learn has a LabelBinarizer class which makes it easy to build these one-hot vectors. 
+We pass it the labels column from our Pandas DataFrame and then call fit() and transform() on it:
+like this:
+encoder = LabelBinarizer()
+encoder.fit(train_tags)
+y_train = encoder.transform(train_tags)
+y_test = encoder.transform(test_tags)
+
+
+With our features and labels in a format Keras can read, 
+we’re ready to build our text classification model.
+
+

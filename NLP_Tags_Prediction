@@ -38,6 +38,6 @@ y_test = encoder.transform(test_tags)
 
 
 With our features and labels in a format Keras can read, 
-we’re ready to build our text classification model.
+we’re ready to build our text classification model
 
 
